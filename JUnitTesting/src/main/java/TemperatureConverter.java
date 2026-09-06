@@ -8,7 +8,6 @@ public class TemperatureConverter {
         return (celsius * 9 / 5) + 32;
     }
 
-    // extreme = below -40C or above 50C
     public boolean isExtremeTemperature(double celsius) {
         return celsius < -40 || celsius > 50;
     }
