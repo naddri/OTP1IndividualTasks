@@ -3,10 +3,10 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {
-                git 'https://github.com/naddri/OTP1Individual.git'
-            }
-        }
+    steps {
+        git credentialsId: 'github-opt1', url: 'https://github.com/naddri/OTP1IndividualTasks.git', branch: 'main'
+    }
+}
 
         stage('Build') {
             steps {
