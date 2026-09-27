@@ -1,17 +1,21 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven'
+    }
+
     stages {
         stage('Checkout') {
-    steps {
-        git credentialsId: 'github-opt1', url: 'https://github.com/naddri/OTP1IndividualTasks.git', branch: 'main'
-    }
-}
+            steps {
+                git 'https://github.com/naddri/OTP1IndividualTasks.git'
+            }
+        }
 
         stage('Build') {
             steps {
                 dir('Jenkins') {
-                    bat 'mvn clean install' // sh for linux and mac
+                    bat 'mvn clean install'
                 }
             }
         }
@@ -62,3 +66,4 @@ pipeline {
         }
     }
 }
+```
