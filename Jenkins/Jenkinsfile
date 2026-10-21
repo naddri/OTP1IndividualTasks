@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+    options {
+        skipDefaultCheckout(true)
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build, test, and coverage') {
+            steps {
+                dir('Jenkins') {
+                    bat 'mvn -Djavafx.platform=win clean verify'
+                }
+            }
+            post {
+                always {
+                    junit 'Jenkins/target/surefire-reports/*.xml'
+                    jacoco()
+                    archiveArtifacts artifacts: 'Jenkins/target/site/jacoco/**', allowEmptyArchive: false
+                }
+            }
+        }
+        stage('Build and push Docker image') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-credentials',
+                    usernameVariable: 'DOCKERHUB_USERNAME',
+                    passwordVariable: 'DOCKERHUB_PASSWORD'
+                )]) {
+                    dir('Jenkins') {
+                        bat 'docker build -t %DOCKERHUB_USERNAME%/temperature-converter:%BUILD_NUMBER% -t %DOCKERHUB_USERNAME%/temperature-converter:latest .'
+                    }
+                    bat 'powershell -NoProfile -NonInteractive -Command "$env:DOCKERHUB_PASSWORD | docker login --username $env:DOCKERHUB_USERNAME --password-stdin"'
+                    bat 'docker push %DOCKERHUB_USERNAME%/temperature-converter:%BUILD_NUMBER%'
+                    bat 'docker push %DOCKERHUB_USERNAME%/temperature-converter:latest'
+                    bat 'docker logout'
+                }
+            }
+        }
+    }
+}
