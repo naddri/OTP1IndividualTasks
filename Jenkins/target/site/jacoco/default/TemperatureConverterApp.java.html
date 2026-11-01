@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TemperatureConverterApp.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">TemperatureConverterApp.java</span></div><h1>TemperatureConverterApp.java</h1><pre class="source lang-java linenums">import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.NodeOrientation;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+<span class="nc" id="L12">public class TemperatureConverterApp extends Application {</span>
+
+<span class="nc" id="L14">    public static final List&lt;String&gt; LANGUAGE_NAMES =</span>
+<span class="nc" id="L15">            List.of(&quot;English&quot;, &quot;Suomi&quot;, &quot;Svenska&quot;, &quot;日本語&quot;, &quot;العربية&quot;);</span>
+<span class="nc" id="L16">    private static final List&lt;Locale&gt; LOCALES = List.of(</span>
+<span class="nc" id="L17">            Locale.US, Locale.forLanguageTag(&quot;fi-FI&quot;), Locale.forLanguageTag(&quot;sv-SE&quot;),</span>
+<span class="nc" id="L18">            Locale.JAPAN, Locale.forLanguageTag(&quot;ar&quot;));</span>
+
+<span class="nc" id="L20">    public static int currentLanguage = 0;</span>
+    private static Stage stage;
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+<span class="nc" id="L25">        stage = primaryStage;</span>
+<span class="nc" id="L26">        showScene();</span>
+<span class="nc" id="L27">        stage.show();</span>
+<span class="nc" id="L28">    }</span>
+
+    // loads the FXML again with the bundle of the selected language
+    public static void showScene() {
+        try {
+<span class="nc" id="L33">            Locale locale = LOCALES.get(currentLanguage);</span>
+<span class="nc" id="L34">            ResourceBundle bundle = ResourceBundle.getBundle(&quot;MessagesBundle&quot;, locale);</span>
+<span class="nc" id="L35">            Parent root = FXMLLoader.load(</span>
+<span class="nc" id="L36">                    TemperatureConverterApp.class.getResource(&quot;/main.fxml&quot;), bundle);</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">            if (locale.getLanguage().equals(&quot;ar&quot;)) {</span>
+<span class="nc" id="L38">                root.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);</span>
+            }
+<span class="nc" id="L40">            stage.setScene(new Scene(root));</span>
+<span class="nc" id="L41">            stage.setTitle(bundle.getString(&quot;application.title&quot;));</span>
+<span class="nc" id="L42">        } catch (Exception e) {</span>
+<span class="nc" id="L43">            throw new RuntimeException(e);</span>
+<span class="nc" id="L44">        }</span>
+<span class="nc" id="L45">    }</span>
+
+    public static void main(String[] args) {
+<span class="nc" id="L48">        launch(args);</span>
+<span class="nc" id="L49">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<TabPane xmlns:fx="http://javafx.com/fxml" fx:controller="TemperatureController"
+         tabClosingPolicy="UNAVAILABLE" prefWidth="380" prefHeight="380"
+         style="-fx-font-family: 'Noto Sans CJK JP';">
+    <Tab text="%tab.temp">
+        <VBox spacing="10">
+            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+            <Label text="%language.label"/>
+            <ComboBox fx:id="languageBox" onAction="#onLanguage"/>
+            <ComboBox fx:id="directionBox"/>
+            <TextField fx:id="inputField" promptText="%input.prompt"/>
+            <Button text="%convert.button" onAction="#onConvert"/>
+            <Label fx:id="resultLabel"/>
+        </VBox>
+    </Tab>
+</TabPane>

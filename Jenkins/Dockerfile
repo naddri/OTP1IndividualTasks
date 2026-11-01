@@ -10,7 +10,9 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
-    libx11-6 libxext6 libxrender1 libxtst6 libxi6 libgtk-3-0 libasound2 wget unzip \
+    libx11-6 libxext6 libxrender1 libxtst6 libxi6 libgtk-3-0 libasound2t64 \
+    fontconfig fonts-noto-cjk wget unzip \
+    && fc-cache -f \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /javafx-sdk \
@@ -24,6 +26,6 @@ ENV DISPLAY=host.docker.internal:0.0
 
 CMD ["java", \
      "--module-path", "/javafx-sdk/javafx-sdk-21.0.4/lib", \
-     "--add-modules", "javafx.controls", \
+     "--add-modules", "javafx.controls,javafx.fxml", \
      "-Dprism.order=sw", \
      "-cp", "app.jar", "TemperatureConverterApp"]

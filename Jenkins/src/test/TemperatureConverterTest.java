@@ -1,6 +1,8 @@
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,6 +36,15 @@ class TemperatureConverterTest {
         assertFalse(converter.isExtremeTemperature(-40));
         assertFalse(converter.isExtremeTemperature(50));
         assertFalse(converter.isExtremeTemperature(20));
+    }
+
+    @Test
+    void allLanguagesHaveSameKeys() {
+        ResourceBundle en = ResourceBundle.getBundle("MessagesBundle", Locale.US);
+        for (String tag : new String[]{"fi-FI", "sv-SE", "ja-JP", "ar"}) {
+            ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", Locale.forLanguageTag(tag));
+            assertEquals(en.keySet(), bundle.keySet(), tag);
+        }
     }
 
     @Test
