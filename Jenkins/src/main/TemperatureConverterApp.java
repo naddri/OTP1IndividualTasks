@@ -5,6 +5,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -19,12 +21,21 @@ public class TemperatureConverterApp extends Application {
 
     public static int currentLanguage = 0;
     private static Stage stage;
+    static Connection connection;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
+        connection = Database.open();
         showScene();
         stage.show();
+    }
+
+    @Override
+    public void stop() throws SQLException {
+        if (connection != null) {
+            connection.close();
+        }
     }
 
     // loads the FXML again with the bundle of the selected language

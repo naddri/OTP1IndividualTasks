@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: temperature-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temperature-converter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: temperature-converter
+  template:
+    metadata:
+      labels:
+        app: temperature-converter
+    spec:
+      containers:
+        - name: temperature-converter
+          image: naddri/temperature-converter:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DISPLAY
+              value: host.minikube.internal:0.0
+          volumeMounts:
+            - name: database
+              mountPath: /app/data
+      volumes:
+        - name: database
+          persistentVolumeClaim:
+            claimName: temperature-data

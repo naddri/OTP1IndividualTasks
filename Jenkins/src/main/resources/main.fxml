@@ -4,17 +4,23 @@
 <?import javafx.geometry.Insets?>
 
 <TabPane xmlns:fx="http://javafx.com/fxml" fx:controller="TemperatureController"
-         tabClosingPolicy="UNAVAILABLE" prefWidth="380" prefHeight="380"
+         tabClosingPolicy="UNAVAILABLE" prefWidth="420" prefHeight="520"
          style="-fx-font-family: 'Noto Sans CJK JP';">
     <Tab text="%tab.temp">
         <VBox spacing="10">
             <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
             <Label text="%language.label"/>
             <ComboBox fx:id="languageBox" onAction="#onLanguage"/>
-            <ComboBox fx:id="directionBox"/>
+            <Label text="%from.label"/>
+            <ComboBox fx:id="fromUnitBox"/>
+            <Label text="%to.label"/>
+            <ComboBox fx:id="toUnitBox"/>
+            <Label fx:id="unitDescriptionLabel" wrapText="true"/>
             <TextField fx:id="inputField" promptText="%input.prompt"/>
             <Button text="%convert.button" onAction="#onConvert"/>
             <Label fx:id="resultLabel"/>
+            <Label text="%history.label"/>
+            <ListView fx:id="historyList" VBox.vgrow="ALWAYS"/>
         </VBox>
     </Tab>
 </TabPane>

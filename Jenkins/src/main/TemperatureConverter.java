@@ -8,6 +8,22 @@ public class TemperatureConverter {
         return (celsius * 9 / 5) + 32;
     }
 
+    public double convertTemperature(double value, String fromUnit, String toUnit) {
+        double celsius = switch (fromUnit) {
+            case "celsius" -> value;
+            case "fahrenheit" -> fahrenheitToCelsius(value);
+            case "kelvin" -> value - 273.15;
+            default -> throw new IllegalArgumentException("Unknown temperature unit: " + fromUnit);
+        };
+
+        return switch (toUnit) {
+            case "celsius" -> celsius;
+            case "fahrenheit" -> celsiusToFahrenheit(celsius);
+            case "kelvin" -> celsius + 273.15;
+            default -> throw new IllegalArgumentException("Unknown temperature unit: " + toUnit);
+        };
+    }
+
     // extreme = below -40C or above 50C
     public boolean isExtremeTemperature(double celsius) {
         return celsius < -40 || celsius > 50;

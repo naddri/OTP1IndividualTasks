@@ -1,72 +1,28 @@
-# Individual In-Class Assignment
+# Temperature Converter — In-class Assignment 6
 
-## 1. Assignment Description
-This project implements a temperature conversion solution with:
-- Conversion between Fahrenheit and Celsius
-- Detection of extreme temperatures (below -40C or above 50C)
-- A simple JavaFX user interface for input and conversion
-- Automated unit testing and code coverage reporting
+A small JavaFX temperature converter localized in English, Finnish, Swedish, Japanese, and Arabic. UI labels come from UTF-8 `.properties` files. Unit names and descriptions come from an embedded H2 database.
 
-Deliverables completed:
-- Core converter logic (`TemperatureConverter`)
-- JavaFX app (`TemperatureConverterApp`)
-- JUnit 5 test suite
-- JaCoCo coverage report
+## Database localization approach
 
-## 2. Technologies & Tools Used
-- Java (JDK 21)
-- JavaFX (javafx-controls)
-- Maven
-- JUnit 5
-- JaCoCo
-- Jenkins files included (`Jenkinsfile`, `Dockerfile`)
+This project uses the **translation table** approach. The `unit` table stores language-neutral unit keys and categories. `unit_translation` stores a row for each unit and language, with a foreign key to `unit`; `conversion_history` links its from/to units and stores the input, result, selected language, and timestamp. The seed data in `Jenkins/src/main/resources/init.sql` includes temperature, speed, distance, and time units in all five languages.
 
-## 3. Design Approach & Implementation Method
-The solution separates logic from presentation:
-- `TemperatureConverter` contains reusable conversion and validation methods.
-- `TemperatureConverterApp` handles the JavaFX GUI and user interactions.
+I chose a translation table because adding a language only requires adding translation rows, and unit keys/categories are stored once instead of being repeated for every language. The DAO uses the requested language and falls back to English if its translation is missing. This is a little more SQL than putting five name columns in one row, but it keeps the data organized and easy to extend.
 
-Key implementation choices:
-- Kept conversion formulas in a dedicated class for easier testing.
-- Added boundary-aware extreme temperature checks.
-- Added input validation in the GUI to handle invalid numeric input safely.
+## Run and test
 
-## 4. Testing & Quality Assurance Steps
-Automated testing was done using JUnit 5.
+Requires JDK 21 and Maven. From the repository root:
 
-Test cases covered:
-- Fahrenheit to Celsius: freezing, boiling, and negative values
-- Celsius to Fahrenheit: freezing, boiling, and negative values
-- Extreme temperature checks: below range, above range, and boundary values
-
-Results:
-- Tests run: 11
-- Failures: 0
-- Errors: 0
-- Skipped: 0
-
-Coverage:
-- JaCoCo report generated under `Jenkins/target/site/jacoco/`
-
-## 5. How to Run
-Prerequisites:
-- JDK 21
-- Maven
-- (Optional for GUI) JavaFX SDK/runtime on Windows
-
-From the project root:
-
-```bash
+```text
 cd Jenkins
-mvn clean test
+mvn -Djavafx.platform=win clean verify
 ```
 
-Run the console demo:
+The JaCoCo report is generated at `Jenkins/target/site/jacoco/index.html`. Run `TemperatureConverterApp` from an IDE with JavaFX configured. The embedded H2 database is created in `Jenkins/data/` on first run.
 
-```bash
-mvn -DskipTests compile
-java -cp target/classes TemperatureConverter
-```
+The converter logic has 90% line coverage, and the two DAOs have 100% line coverage in the current JaCoCo report.
 
-Run the JavaFX application by launching `TemperatureConverterApp` from your IDE (with JavaFX configured).
+## Docker and Kubernetes
 
+Build the image from `Jenkins/` with `docker build -t temperature-converter .`. The GUI container needs an X server; set `DISPLAY` to the reachable X server address before running it. The Kubernetes example is `Jenkins/k8s/temperature-converter.yaml`; update its image name and configure `DISPLAY` for your X server before applying it. H2 runs inside the application container, so no separate database pod is needed.
+
+The Jenkins pipeline runs tests and JaCoCo, then builds and pushes Docker Hub tags. Configure Jenkins with the `dockerhub-credentials` username/password credential before running the publish stage.
