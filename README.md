@@ -21,8 +21,3 @@ The JaCoCo report is generated at `Jenkins/target/site/jacoco/index.html`. Run `
 
 The converter logic has 90% line coverage, and the two DAOs have 100% line coverage in the current JaCoCo report.
 
-## Docker and Kubernetes
-
-Build the image from `Jenkins/` with `docker build -t temperature-converter .`. The GUI container needs an X server; set `DISPLAY` to the reachable X server address before running it. The Kubernetes example is `Jenkins/k8s/temperature-converter.yaml`; update its image name and configure `DISPLAY` for your X server before applying it. H2 runs inside the application container, so no separate database pod is needed.
-
-The Jenkins pipeline runs tests and JaCoCo, then builds and pushes Docker Hub tags. Configure Jenkins with the `dockerhub-credentials` username/password credential before running the publish stage.
